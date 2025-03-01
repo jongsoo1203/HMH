@@ -1,8 +1,9 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { MapPin, Filter } from "lucide-react"
-import { Search } from "lucide-react"
+import { MapPin, Filter, Search } from "lucide-react"
 import TrialList from "@/components/trial-list"
+import { createClient } from "@/utils/supabase/server"
+import { redirect } from "next/navigation"
 
 // Mock trial data
 const trials = [
@@ -56,7 +57,20 @@ const trials = [
   },
 ]
 
-export default function Home() {
+export default async function Dashboard() {
+  // Initialize Supabase client
+  const supabase = await createClient();
+
+  // Check if user is authenticated
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Redirect to sign-in page if not authenticated
+  if (!user) {
+    return redirect("/sign-in");
+  }
+
   return ( 
     <section className="flex flex-col items-center justify-center py-12 max-w-4xl mx-auto">
       <h1 className="text-6xl font-bold text-center">

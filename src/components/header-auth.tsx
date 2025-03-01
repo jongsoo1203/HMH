@@ -3,7 +3,9 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
 
-// Main Authentication component
+// Main Authentication component,
+// checks if user is logged in or not
+// and displays the appropriate buttons
 export default async function AuthButton() {
   const supabase = await createClient();
 
