@@ -5,6 +5,7 @@ import HeaderAuth from "@/components/header-auth";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -18,11 +19,18 @@ export const metadata = {
 
 const montserrat = Montserrat();
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Check authentication status
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  // Determine the "Find Trials" link based on auth status
+  const findTrialsLink = user ? "/dashboard" : "/";
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={montserrat.className} suppressHydrationWarning>
@@ -30,12 +38,12 @@ export default function RootLayout({
           <div className="min-h-screen bg-background flex flex-col antialiased">
             <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
               <div className="container mx-auto px-4 flex h-16 items-center">
-                <Link href="/" className="flex items-center gap-2 font-semibold">
+                <Link href={user ? "/dashboard" : "/"} className="flex items-center gap-2 font-semibold">
                   <Beaker className="h-8 w-8 text-blue-600" />
                   <span className="text-lg">Health Mapping Hub</span>
                 </Link>
                 <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
-                  <Link href="/" className="text-md font-medium hover:underline underline-offset-8">Find Trials</Link>
+                  <Link href={findTrialsLink} className="text-md font-medium hover:underline underline-offset-8">Find Trials</Link>
                   <Link href="/contact" className="text-md font-medium hover:underline underline-offset-8">Contact</Link>
                   <ThemeSwitcher />
                   <HeaderAuth />

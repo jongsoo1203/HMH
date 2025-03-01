@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center p-8 font-[family-name:var(--font-geist-sans)]">
       <div className="w-full max-w-md flex flex-col items-center gap-8">
-        <div className="w-full text-center mb-2">
+        <div className="w-full flex justify-center mb-2">
           <ThemeAwareAvatar size="large" />
         </div>
         
