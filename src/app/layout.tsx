@@ -2,7 +2,6 @@ import { Beaker } from "lucide-react";
 import { ThemeProvider } from "next-themes";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import HeaderAuth from "@/components/header-auth";
-import { AuthStatus } from "@/components/auth-status";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
@@ -39,7 +38,6 @@ export default function RootLayout({
                   <Link href="/" className="text-md font-medium hover:underline underline-offset-8">Find Trials</Link>
                   <Link href="/contact" className="text-md font-medium hover:underline underline-offset-8">Contact</Link>
                   <ThemeSwitcher />
-                  {/* <AuthStatus /> */}
                   <HeaderAuth />
                 </nav>
               </div>
