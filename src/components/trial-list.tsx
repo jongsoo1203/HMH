@@ -6,7 +6,20 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Card, CardHeader, CardFooter, CardContent } from "@/components/ui/card"
 
-export default function TrialList({ trials } : { trials: object[] }) {
+// Define a proper interface for the trial data
+export interface Trial {
+    id: number;
+    title: string;
+    condition: string;
+    phase: string;
+    location: string;
+    distance: string;
+    startDate: string;
+    status: string;
+    participants: string;
+    matchScore: number;
+  }
+export default function TrialList({ trials } : { trials: Trial[] }) {
     return (
         <article>
             { trials.map((trial) => (
