@@ -24,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.className} antialiased bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(137,196,244,0.5)_100%)]`}
       >
-        <header className="sticky top-0 z-3 w-full border-b bg-background/95 flex justify-evenly backdrop-blur supports-[backdrop-filter]:bg-background/90 px-4">
+        <header className="sticky top-0 z-3 w-full border-b bg-background/95 flex justify-evenly backdrop-blur supports-[backdrop-filter]:bg-background/90 px-4 select-none">
           <div className="container flex h-16 items-center">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Beaker className="h-8 w-8 text-blue-600" />
