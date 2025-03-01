@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 
-import Link from "next/link"
-import { Beaker } from "lucide-react"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-
+import Link from "next/link";
+import { Beaker } from "lucide-react";
+import { ThemeProvider } from "next-themes";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { ThemeAwareAvatar } from "@/components/theme-aware-avatar";
 
 export const metadata: Metadata = {
   title: "Health Mapping Hub",
@@ -25,67 +25,51 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
-
-    <html lang="en">
-      <body
-        className={`${montserrat.className} antialiased bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(137,196,244,0.5)_100%)]`}
-      >
-        <header className="sticky top-0 z-3 w-full border-b bg-background/95 flex justify-evenly backdrop-blur supports-[backdrop-filter]:bg-background/90 px-4">
-          <div className="container flex h-16 items-center">
-            <Link href="/" className="flex items-center gap-2 font-semibold">
-              <Beaker className="h-8 w-8 text-blue-600" />
-              <span className="text-lg">Health Mapping Hub</span>
-            </Link>
-            <nav className="ml-auto flex gap-4 sm:gap-12">
-              <Link href="/" className="text-lg font-medium hover:underline underline-offset-8">Find Trials</Link>
-              <Link href="/contact" className="text-lg font-medium hover:underline underline-offset-8">Contact</Link>
-              <button>
-              <Avatar>
-                  <AvatarImage src="/HMH-logo.svg" alt="Health Mapping Hub logo" />
-                  <AvatarFallback>HMH</AvatarFallback>
-              </Avatar>
-              </button>
-            </nav>
+    <html lang="en" suppressHydrationWarning>
+      <body className={montserrat.className} suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <div className="min-h-screen bg-background flex flex-col antialiased">
+            <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+              <div className="container mx-auto px-4 flex h-16 items-center">
+                <Link href="/" className="flex items-center gap-2 font-semibold">
+                  <Beaker className="h-8 w-8 text-blue-600" />
+                  <span className="text-lg">Health Mapping Hub</span>
+                </Link>
+                <nav className="ml-auto flex gap-4 sm:gap-12 items-center">
+                  <Link href="/" className="text-lg font-medium hover:underline underline-offset-8">Find Trials</Link>
+                  <Link href="/contact" className="text-lg font-medium hover:underline underline-offset-8">Contact</Link>
+                  <ThemeSwitcher />
+                  <button>
+                    <ThemeAwareAvatar />
+                  </button>
+                </nav>
+              </div>
+            </header>
+          
+            <main className="flex-1">
+              <div className="container mx-auto px-4">
+                {children}
+              </div>
+            </main>
+          
+            <footer className="border-t py-4">
+              <div className="container mx-auto px-4 flex flex-col items-center justify-between gap-4 md:flex-row">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Health Mapping Hub</span>
+                </div>
+                <p className="text-center text-sm text-muted-foreground md:text-left">
+                  &copy; Health Mapping Hub, 2025. All rights reserved.
+                </p>
+                <nav className="flex gap-4 sm:gap-6">
+                  <Link href="/terms" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Terms</Link>
+                  <Link href="/privacy" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Privacy</Link>
+                  <Link href="/contact" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Contact</Link>
+                </nav>
+              </div>
+            </footer>
           </div>
-        </header>
-
-        
-        {children}
-        <footer className="m-0 z-3 flex justify-center items-center w-full py-4 bg-white">
-          <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">Health Mapping Hub</span>
-            </div>
-            <p className="text-center text-sm text-muted-foreground md:text-left">
-              &copy; Health Mapping Hub, 2025. All rights reserved.
-            </p>
-            <nav className="flex gap-4 sm:gap-6">
-              <Link href="/terms" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Terms</Link>
-              <Link href="/privacy" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Privacy</Link>
-              <Link href="/contact" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Contact</Link>
-            </nav>
-          </div>
-        </footer>
-        <footer className="m-0 z-3 flex justify-center items-center w-full py-4 bg-white">
-          <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">Health Mapping Hub</span>
-            </div>
-            <p className="text-center text-sm text-muted-foreground md:text-left">
-              &copy; Health Mapping Hub, 2025. All rights reserved.
-            </p>
-            <nav className="flex gap-4 sm:gap-6">
-              <Link href="/terms" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Terms</Link>
-              <Link href="/privacy" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Privacy</Link>
-              <Link href="/contact" className="text-md font-medium hover:underline underline-offset-8 transition-colors">Contact</Link>
-            </nav>
-          </div>
-        </footer>
+        </ThemeProvider>
       </body>
     </html>
-    
   );
 }
-
-
