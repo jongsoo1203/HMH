@@ -13,19 +13,76 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { signInAction } from "@/app/actions"
+import { FormMessage, Message } from "@/components/form-message"
 
 export function LoginForm({
   className,
+  searchParams,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { searchParams?: any }) {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [formMessage, setFormMessage] = useState<Message | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would handle the login logic
-    // For example, using Supabase auth.signIn or similar
-    // On success, redirect to dashboard or home page
-    router.push("/dashboard");
+    setIsLoading(true);
+    setFormMessage(null);
+
+    try {
+      // Create a FormData object
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      
+      // Call the server action for signing in
+      const result = await signInAction(formData);
+
+      if (result.error) {
+        setFormMessage({ error: result.error });
+        setIsLoading(false);
+        return;
+      }
+
+      // On successful login, redirect to dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+      setFormMessage({ error: "An unexpected error occurred. Please try again." });
+      setIsLoading(false);
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    setFormMessage(null);
+
+    // try {
+    //   // Import the Supabase client from your utils/supabase.ts file
+    //   // This assumes you have a client-side Supabase client setup
+    //   const { createClientComponentClient } = await import('@supabase/auth-helpers-nextjs');
+    //   const supabase = createClientComponentClient();
+      
+    //   const { error } = await supabase.auth.signInWithOAuth({
+    //     provider: 'google',
+    //     options: {
+    //       redirectTo: `${window.location.origin}/auth/callback`
+    //     }
+    //   });
+      
+    //   if (error) throw error;
+      
+    //   // Note: Google auth redirects the user, so we don't need to handle
+    //   // success case here as the page will reload
+    // } catch (error) {
+    //   console.error("Google login error:", error);
+    //   setFormMessage({ error: "Failed to sign in with Google. Please try again." });
+    //   setIsLoading(false);
+    // }
   }
 
   return (
@@ -46,6 +103,8 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -59,20 +118,29 @@ export function LoginForm({
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" required />
+                <Input 
+                  id="password" 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                />
               </div>
+              {formMessage && <FormMessage message={formMessage} />}
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Logging in..." : "Login"}
                 </Button>
                 <Button 
                   type="button" 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => {
-                    // Here you would handle Google auth logic
-                    // For example, using Supabase auth.signIn with provider
-                  }}
+                  onClick={handleGoogleSignIn}
+                  disabled={isLoading}
                 >
                   Login with Google
                 </Button>
