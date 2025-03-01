@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 
@@ -35,12 +36,10 @@ export default function RootLayout({
               <Link href="/" className="text-lg font-medium hover:underline underline-offset-8">Find Trials</Link>
               <Link href="/contact" className="text-lg font-medium hover:underline underline-offset-8">Contact</Link>
               <button>
-                <Avatar>
-                  <AvatarImage src="globe.svg" alt="avatar" />
-                  <AvatarFallback>
-                    <AvatarImage src="" alt="avatar fallback"></AvatarImage>
-                  </AvatarFallback>
-                </Avatar>
+              <Avatar>
+                  <AvatarImage src="/HMH-logo.svg" alt="Health Mapping Hub logo" />
+                  <AvatarFallback>HMH</AvatarFallback>
+              </Avatar>
               </button>
             </nav>
           </div>
