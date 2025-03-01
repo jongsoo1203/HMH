@@ -1,5 +1,5 @@
 "use server";
-
+// This file handles all the actions that can be performed by the server.
 import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";

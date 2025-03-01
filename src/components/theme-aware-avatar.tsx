@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -14,42 +13,54 @@ export function ThemeAwareAvatar({ size = "normal" }) {
 
   // Size configurations
   const dimensions = size === "large" 
-    ? { width: 140, height: 50 } 
+    ? { width: 120, height: 48 } 
     : { width: 40, height: 40 };
+  
+  const logoSize = size === "large" 
+    ? { width: 80, height: 30 } 
+    : { width: 24, height: 24 };
+  
+  const paddingSize = size === "large" ? "px-4 py-2" : "p-2";
 
   // Before mounting, show a placeholder
   if (!mounted) {
     return (
       <div 
-        className="bg-transparent mx-auto" 
+        className="bg-transparent mx-auto"
         style={{ width: dimensions.width, height: dimensions.height }}
       />
     );
   }
 
-  // When in dark mode, show text alternative
-  if (resolvedTheme === "dark") {
-    return (
-      <div 
-        className="flex items-center justify-center text-white mx-auto"
-        style={{ width: dimensions.width, height: dimensions.height }}
-      >
-        <span className={size === "large" ? "text-2xl font-bold" : "text-sm font-medium"}>
-          HMH
-        </span>
-      </div>
-    );
-  }
+  // Color based on theme
+  const fillColor = resolvedTheme === "dark" ? "#FFFFFF" : "#1E40AF"; // white in dark mode, blue-600 in light mode
 
-  // In light mode, show the logo image
+  // Avatar content based on theme with inline SVG
   return (
-    <Image 
-      src="/HMH-logo.svg" 
-      width={dimensions.width} 
-      height={dimensions.height} 
-      alt="Health Mapping Hub logo"
-      className="mx-auto" 
-      priority
-    />
+    <div 
+      className={`flex items-center justify-center mx-auto rounded-full ${paddingSize} ${resolvedTheme === "dark" ? "bg-gray-700" : "bg-blue-100"}`}
+      style={{ 
+        width: size === "large" ? "auto" : dimensions.width,
+        height: dimensions.height
+      }}
+    >
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 100 100"
+        width={logoSize.width} 
+        height={logoSize.height}
+      >
+        <text 
+          x="50" 
+          y="75" 
+          fontSize="60" 
+          fontWeight="bold" 
+          textAnchor="middle" 
+          fill={fillColor}
+        >
+          HMH
+        </text>
+      </svg>
+    </div>
   );
 }
