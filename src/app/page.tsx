@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "@/components/ui/login-form";
 import { ThemeAwareAvatar } from "@/components/theme-aware-avatar";
 
 export default function LoginPage() {
