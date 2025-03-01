@@ -12,86 +12,80 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { signInAction } from "@/app/actions"
+import { createClient } from "@/utils/supabase/client"
 import { FormMessage, Message } from "@/components/form-message"
 
 export function LoginForm({
   className,
-  searchParams,
+  message,
   ...props
-}: React.ComponentProps<"div"> & { searchParams?: any }) {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [formMessage, setFormMessage] = useState<Message | null>(null);
+}: React.ComponentProps<"div"> & { message?: Message }) {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [formMessage, setFormMessage] = useState<Message | null>(message || null)
+  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setFormMessage(null);
+    e.preventDefault()
+    setIsLoading(true)
+    setFormMessage(null)
+
+    if (!email || !password) {
+      setFormMessage({ error: "Email and password are required" })
+      setIsLoading(false)
+      return
+    }
+
+    // Create a FormData object for the server action
+    const formData = new FormData()
+    formData.append("email", email)
+    formData.append("password", password)
 
     try {
-      // Create a FormData object
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
-      
-      // Call the server action for signing in
-      const result = await signInAction(formData);
-
-      if (result.error) {
-        setFormMessage({ error: result.error });
-        setIsLoading(false);
-        return;
-      }
-
-      // On successful login, redirect to dashboard
-      router.push("/dashboard");
+      // Use the server action
+      await signInAction(formData)
+      // The server action will handle the redirect
     } catch (error) {
-      console.error("Login error:", error);
-      setFormMessage({ error: "An unexpected error occurred. Please try again." });
-      setIsLoading(false);
+      console.error("Sign in error:", error)
+      setFormMessage({ error: "An unexpected error occurred" })
+      setIsLoading(false)
     }
   }
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    setFormMessage(null);
+    setIsLoading(true)
+    setFormMessage(null)
 
-    // try {
-    //   // Import the Supabase client from your utils/supabase.ts file
-    //   // This assumes you have a client-side Supabase client setup
-    //   const { createClientComponentClient } = await import('@supabase/auth-helpers-nextjs');
-    //   const supabase = createClientComponentClient();
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
+        }
+      })
       
-    //   const { error } = await supabase.auth.signInWithOAuth({
-    //     provider: 'google',
-    //     options: {
-    //       redirectTo: `${window.location.origin}/auth/callback`
-    //     }
-    //   });
-      
-    //   if (error) throw error;
-      
-    //   // Note: Google auth redirects the user, so we don't need to handle
-    //   // success case here as the page will reload
-    // } catch (error) {
-    //   console.error("Google login error:", error);
-    //   setFormMessage({ error: "Failed to sign in with Google. Please try again." });
-    //   setIsLoading(false);
-    // }
+      if (error) throw error
+    } catch (error) {
+      console.error("Google login error:", error)
+      setFormMessage({ error: "Failed to sign in with Google" })
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Sign in to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to sign in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -101,8 +95,9 @@ export function LoginForm({
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -120,6 +115,7 @@ export function LoginForm({
                 </div>
                 <Input 
                   id="password" 
+                  name="password"
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -133,7 +129,7 @@ export function LoginForm({
                   className="w-full"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Logging in..." : "Login"}
+                  {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
                 <Button 
                   type="button" 
@@ -142,7 +138,7 @@ export function LoginForm({
                   onClick={handleGoogleSignIn}
                   disabled={isLoading}
                 >
-                  Login with Google
+                  Sign in with Google
                 </Button>
               </div>
             </div>

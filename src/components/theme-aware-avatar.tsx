@@ -27,29 +27,15 @@ export function ThemeAwareAvatar({ size = "normal" }) {
     );
   }
 
-  // When in dark mode, show text alternative
-  if (resolvedTheme === "dark") {
-    return (
-      <div 
-        className="flex items-center justify-center text-white mx-auto"
-        style={{ width: dimensions.width, height: dimensions.height }}
-      >
-        <span className={size === "large" ? "text-2xl font-bold" : "text-sm font-medium"}>
-          HMH
-        </span>
-      </div>
-    );
-  }
-
-  // In light mode, show the logo image
+  // Avatar content based on theme
   return (
-    <Image 
-      src="/HMH-logo.svg" 
-      width={dimensions.width} 
-      height={dimensions.height} 
-      alt="Health Mapping Hub logo"
-      className="mx-auto" 
-      priority
-    />
+    <div 
+      className={`flex items-center justify-center rounded-full ${resolvedTheme === "dark" ? "bg-gray-700" : "bg-blue-100"}`}
+      style={{ width: dimensions.width, height: dimensions.height }}
+    >
+      <span className={`${size === "large" ? "text-2xl" : "text-sm"} font-medium ${resolvedTheme === "dark" ? "text-white" : "text-blue-600"}`}>
+        HMH
+      </span>
+    </div>
   );
 }

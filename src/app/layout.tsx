@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Beaker } from "lucide-react";
 import { ThemeProvider } from "next-themes";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { ThemeAwareAvatar } from "@/components/theme-aware-avatar";
+import { AuthStatus } from "@/components/auth-status";
 
 export const metadata: Metadata = {
   title: "Health Mapping Hub",
@@ -31,19 +31,17 @@ export default function RootLayout({
                   <Beaker className="h-8 w-8 text-blue-600" />
                   <span className="text-lg">Health Mapping Hub</span>
                 </Link>
-                <nav className="ml-auto flex gap-4 sm:gap-12 items-center">
-                  <Link href="/" className="text-lg font-medium hover:underline underline-offset-8">Find Trials</Link>
-                  <Link href="/contact" className="text-lg font-medium hover:underline underline-offset-8">Contact</Link>
+                <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
+                  <Link href="/" className="text-md font-medium hover:underline underline-offset-8">Find Trials</Link>
+                  <Link href="/contact" className="text-md font-medium hover:underline underline-offset-8">Contact</Link>
                   <ThemeSwitcher />
-                  <button>
-                    <ThemeAwareAvatar />
-                  </button>
+                  <AuthStatus />
                 </nav>
               </div>
             </header>
           
             <main className="flex-1">
-              <div className="container mx-auto px-4">
+              <div className="container mx-auto px-4 py-8">
                 {children}
               </div>
             </main>
