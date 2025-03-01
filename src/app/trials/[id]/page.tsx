@@ -230,4 +230,3 @@ export default function TrialDetailsPage({ params }: { params: { id: string } })
     </div>
   )
 }
-

@@ -2,20 +2,11 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+
 import Link from "next/link"
 import { Beaker } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Health Mapping Hub",
