@@ -1,37 +1,21 @@
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { MapPin, Filter } from "lucide-react"
-import { Search } from "lucide-react"
-import TrialList from "../components/trial-list"
+import { LoginForm } from "@/components/login-form";
+import { ThemeAwareAvatar } from "@/components/theme-aware-avatar";
 
-export default function Home() {
-  return ( 
-    <section className="flex flex-col items-center justify-center py-12 max-w-4xl mx-auto">
-      <h1 className="text-6xl font-bold text-center">
-        Find Clinical Trials
-      </h1>
-      <p className="text-lg font-medium text-center mt-4 text-balance text-gray-500">
-        Discover clinical trials for rare diseases that match <br /> your profile and location.
-      </p>
-      <div className="mx-auto py-12">
-        <div className="flex flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4" />
-            <Input type="search" placeholder="Search by condition, treatment, or keyword" className="w-[40rem] pl-8 shadow-sm bg-white" />
-          </div>
-          <div className="flex justify-end items-center gap-4">
-            <Button variant="outline" className="hover:bg-blue-300 cursor-pointer transition-all duration-300">
-              <MapPin className="h-4 w-4" />
-              Location
-            </Button>
-            <Button variant="outline" className="hover:bg-blue-300 cursor-pointer transition-all duration-300">
-              <Filter className="h-4 w-4" />
-              Filters
-            </Button>
-          </div>
+export default function LoginPage() {
+  return (
+    <main className="min-h-screen flex items-center justify-center p-8 font-[family-name:var(--font-geist-sans)]">
+      <div className="w-full max-w-md flex flex-col items-center gap-8">
+        <div className="w-full text-center mb-2">
+          <ThemeAwareAvatar size="large" />
         </div>
-        <TrialList />
+        
+        <LoginForm />
+        
+        <div className="w-full text-center mt-6 text-sm text-gray-500">
+          {/* You can add footer content here */}
+          {/* <p>© 2025 Your Company. All rights reserved.</p> */}
+        </div>
       </div>
-    </section>
-  )
+    </main>
+  );
 }
