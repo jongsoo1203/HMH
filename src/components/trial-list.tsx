@@ -57,7 +57,7 @@ export default function TrialList({ trials } : { trials: object[] }) {
                     </div>
                 </CardContent>
                 <CardFooter className="pt-2">
-                    <Link href={`/trials/${ trial.id }`} className="w-full">
+                    <Link href={ `/trials/${ trial.id }` } className="w-full">
                     <Button variant="outline" className="w-full gap-1 hover:bg-primary-50 transition-colors">
                         View Details
                         <ArrowRight className="h-4 w-4" />
