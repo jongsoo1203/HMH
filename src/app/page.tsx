@@ -4,6 +4,58 @@ import { MapPin, Filter } from "lucide-react"
 import { Search } from "lucide-react"
 import TrialList from "../components/trial-list"
 
+// Mock trial data
+const trials = [
+  {
+    id: 1,
+    title: "Phase 2 Study of XYZ-123 for Rare Neurological Disorder",
+    condition: "Rare Neurological Disorder",
+    phase: "Phase 2",
+    location: "Boston, MA",
+    distance: "5 miles",
+    startDate: "June 2023",
+    status: "Recruiting",
+    participants: "15/30",
+    matchScore: 92,
+  },
+  {
+    id: 2,
+    title: "Safety and Efficacy Study of ABC-456 in Patients with Rare Metabolic Disease",
+    condition: "Rare Metabolic Disease",
+    phase: "Phase 3",
+    location: "San Francisco, CA",
+    distance: "12 miles",
+    startDate: "July 2023",
+    status: "Recruiting",
+    participants: "24/50",
+    matchScore: 87,
+  },
+  {
+    id: 3,
+    title: "Observational Study of DEF-789 for Rare Autoimmune Condition",
+    condition: "Rare Autoimmune Condition",
+    phase: "Phase 1",
+    location: "Chicago, IL",
+    distance: "8 miles",
+    startDate: "August 2023",
+    status: "Not yet recruiting",
+    participants: "0/20",
+    matchScore: 78,
+  },
+  {
+    id: 4,
+    title: "Long-term Follow-up Study for Patients with Rare Genetic Disorder",
+    condition: "Rare Genetic Disorder",
+    phase: "Phase 4",
+    location: "New York, NY",
+    distance: "3 miles",
+    startDate: "May 2023",
+    status: "Active, not recruiting",
+    participants: "40/40",
+    matchScore: 65,
+  },
+]
+
 export default function Home() {
   return ( 
     <section className="flex flex-col items-center justify-center py-12 max-w-4xl mx-auto">
@@ -17,7 +69,7 @@ export default function Home() {
         <div className="flex flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4" />
-            <Input type="search" placeholder="Search by condition, treatment, or keyword" className="w-[40rem] pl-8 shadow-sm bg-white" />
+            <Input type="search" placeholder="Search by condition, treatment, or keyword" className="w-[30rem] pl-8 shadow-sm bg-white" />
           </div>
           <div className="flex justify-end items-center gap-4">
             <Button variant="outline" className="hover:bg-blue-300 cursor-pointer transition-all duration-300">
@@ -30,7 +82,7 @@ export default function Home() {
             </Button>
           </div>
         </div>
-        <TrialList />
+        <TrialList trials={ trials } />
       </div>
     </section>
   )
