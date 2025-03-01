@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+
 import Link from "next/link"
 import { Beaker } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -63,6 +64,7 @@ export default function RootLayout({
         </footer>
       </body>
     </html>
+    
   );
 }
 
