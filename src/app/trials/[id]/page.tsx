@@ -5,11 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, MapPin, Calendar, Clock, Users, FileText, CheckCircle, AlertCircle } from "lucide-react"
+import { type Trial } from "../../types/trial"
 
-export default function TrialDetailsPage({ params }: { params: { id: string } }) {
+export default function TrialDetailsPage({ params }: { params: {  } }) {
   // Mock trial data - in a real app, this would be fetched from an API
-  const trial = {
-    id: params.id,
+  const trial: Trial[] = {
+    nctId: params.nctId,
     title: "Phase 2 Study of XYZ-123 for Rare Neurological Disorder",
     condition: "Rare Neurological Disorder",
     phase: "Phase 2",

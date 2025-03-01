@@ -32,7 +32,7 @@ export default function RootLayout({
                   <span className="text-lg">Health Mapping Hub</span>
                 </Link>
                 <nav className="ml-auto flex gap-4 sm:gap-12 items-center">
-                  <Link href="/" className="text-lg font-medium hover:underline underline-offset-8">Find Trials</Link>
+                  <Link href="/trials" className="text-lg font-medium hover:underline underline-offset-8">Find Trials</Link>
                   <Link href="/contact" className="text-lg font-medium hover:underline underline-offset-8">Contact</Link>
                   <ThemeSwitcher />
                   <button>
