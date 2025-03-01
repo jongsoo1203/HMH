@@ -1,11 +1,76 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { MapPin, Filter } from "lucide-react"
-import { Search } from "lucide-react"
+import { MapPin, Filter, Search } from "lucide-react"
 import TrialList from "@/components/trial-list"
-import { getTrials } from "../api/trials"
+import { createClient } from "@/utils/supabase/server"
+import { redirect } from "next/navigation"
 
-export default function Home() {
+// Mock trial data
+const trials = [
+  {
+    id: 1,
+    title: "Phase 2 Study of XYZ-123 for Rare Neurological Disorder",
+    condition: "Rare Neurological Disorder",
+    phase: "Phase 2",
+    location: "Boston, MA",
+    distance: "5 miles",
+    startDate: "June 2023",
+    status: "Recruiting",
+    participants: "15/30",
+    matchScore: 92,
+  },
+  {
+    id: 2,
+    title: "Safety and Efficacy Study of ABC-456 in Patients with Rare Metabolic Disease",
+    condition: "Rare Metabolic Disease",
+    phase: "Phase 3",
+    location: "San Francisco, CA",
+    distance: "12 miles",
+    startDate: "July 2023",
+    status: "Recruiting",
+    participants: "24/50",
+    matchScore: 87,
+  },
+  {
+    id: 3,
+    title: "Observational Study of DEF-789 for Rare Autoimmune Condition",
+    condition: "Rare Autoimmune Condition",
+    phase: "Phase 1",
+    location: "Chicago, IL",
+    distance: "8 miles",
+    startDate: "August 2023",
+    status: "Not yet recruiting",
+    participants: "0/20",
+    matchScore: 78,
+  },
+  {
+    id: 4,
+    title: "Long-term Follow-up Study for Patients with Rare Genetic Disorder",
+    condition: "Rare Genetic Disorder",
+    phase: "Phase 4",
+    location: "New York, NY",
+    distance: "3 miles",
+    startDate: "May 2023",
+    status: "Active, not recruiting",
+    participants: "40/40",
+    matchScore: 65,
+  },
+]
+
+export default async function Dashboard() {
+  // Initialize Supabase client
+  const supabase = await createClient();
+
+  // Check if user is authenticated
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Redirect to sign-in page if not authenticated
+  if (!user) {
+    return redirect("/sign-in");
+  }
+
   return ( 
     <section className="flex flex-col items-center justify-center py-12 max-w-4xl mx-auto">
       <h1 className="text-6xl font-bold text-center">
