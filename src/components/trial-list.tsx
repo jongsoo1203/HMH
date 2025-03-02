@@ -11,6 +11,7 @@ import { type Trial } from "../app/types/trial"
 export default async function TrialList() {
     const response = await getTrials();
     const data = await response.json();
+    console.log(data)
 
     // Correctly map the data structure based on the console output
     const trials: Trial[] = data.studies.map((study: any) => {
@@ -19,13 +20,20 @@ export default async function TrialList() {
         return {
             nctId: protocolSection.identificationModule?.nctId || 'Unknown ID',
             title: protocolSection.identificationModule?.briefTitle || 'No Title',
-            condition: protocolSection.conditionsModule?.conditions || [],
+            conditions: protocolSection.conditionsModule?.conditions || [],
             conditionKeywords: protocolSection.conditionsModule?.keywords || [],
             phase: protocolSection.designModule?.phases?.[0] || 'Not Specified',
-            locations: protocolSection.contactsLocationsModule?.locations || [],
+            locations: Array.from(new Set(protocolSection.contactsLocationsModule?.locations || [])),
             startDate: protocolSection.statusModule?.startDateStruct?.date || 'Unknown',
             status: protocolSection.statusModule?.overallStatus || 'Unknown',
-            participants: protocolSection.designModule?.enrollmentInfo?.count || 'Not Specified'
+            participants: protocolSection.designModule?.enrollmentInfo?.count || 'Not Specified',
+            description: protocolSection.descriptionModule?.detailedDescription || 'No Description',
+            eligibilityCriteria: protocolSection.eligibilityModule?.eligibilityCriteria || 'No Criteria',
+            sex: protocolSection.eligibilityModule?.sex || 'Not Specified',
+            minimumAge: protocolSection.eligibilityModule?.minimumAge || 'Not Specified',
+            maximumAge: protocolSection.eligibilityModule?.maximumAge || 'Not Specified',
+            primaryOutcomes: protocolSection.outcomesModule?.primaryOutcomes || [],
+            secondaryOutcomes: protocolSection.outcomesModule?.secondaryOutcomes || [],
         };
     });
 
@@ -53,16 +61,16 @@ export default async function TrialList() {
                             </div>
                             <CardTitle className="text-xl mt-2">{trial.title}</CardTitle>
                             <CardDescription className="text-base text-primary-700">
-                                {Array.isArray(trial.condition) ? trial.condition.join(', ') : trial.condition}
+                                {Array.isArray(trial.conditions) ? trial.conditions.join(', ') : trial.conditions}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="pb-2">
-                            <div className="flex flex-wrap gap-4 text-sm">
+                            <div className="flex flex-col gap-4 text-sm">
                                 <div className="flex items-center gap-1">
                                     <MapPin className="h-4 w-4 text-secondary-600" />
-                                    <div className="flex flex-row gap-1">
+                                    <div className="flex gap-1">
                                         {Array.isArray(trial.locations) && trial.locations.length > 0 ? (
-                                            trial.locations.map((location, index) => (
+                                            trial.locations.slice(0, 3).map((location, index) => (
                                                 <span key={index} className="border border-primary-200 rounded-md p-1">
                                                     {location.state && location.country
                                                         ? `${location.state}, ${location.country}`
