@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from "@supabase/supabase-js";
 import { type Trial } from "../types/trial";
 
-const API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies?postFilter.overallStatus=RECRUITING,AVAILABLE,ENROLLING_BY_INVITATION,NOT_YET_RECRUITING&countTotal=true&pageSize=100&sort=@relevance";
+const API_BASE_URL = "https://clinicaltrials.gov/api/v2/studies?postFilter.overallStatus=RECRUITING,AVAILABLE,ENROLLING_BY_INVITATION,NOT_YET_RECRUITING&countTotal=true&pageSize=20&sort=@relevance";
 const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabase_anon_key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabase_url, supabase_anon_key);
@@ -50,7 +50,7 @@ export async function getTrials() {
             conditions: trial.conditions,
             condition_keywords: trial.conditionKeywords,
             phase: trial.phase,
-            locations: trial.locations.map(location => location.facility + ', ' + location.country).join('; '),
+            locations: trial.locations.map(location => location.facility + ', ' + location.country),
             startDate: trial.startDate,
             status: trial.status,
             num_participants: trial.participants,
@@ -63,7 +63,10 @@ export async function getTrials() {
 
         const { data, error } = await supabase
             .from('trials')
-            .insert(formattedTrials
+            .upsert(formattedTrials, { 
+                onConflict: 'id',
+                ignoreDuplicates: false
+            }
         );
         console.log(data)
 
@@ -73,7 +76,7 @@ export async function getTrials() {
             console.log(`Successfully processed ${formattedTrials.length} trials`);
         }
 
-        console.log("Processed trials:", trials);
+        // console.log("Processed trials:", trials);
 
         return NextResponse.json(data);
     } catch (error) {
