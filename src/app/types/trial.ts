@@ -13,6 +13,4 @@ export interface Trial {
     sex: string;
     minimumAge: string;
     maximumAge: string;
-    primaryOutcomes: Array<string>;
-    secondaryOutcomes: Array<string>;
 }
