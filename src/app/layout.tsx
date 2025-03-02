@@ -57,7 +57,7 @@ export default async function RootLayout({
             </div>
           </main>
           
-          <footer className="border-t py-4">
+          <footer className="border-t py-4 bg-white">
             <div className="container mx-auto px-4 flex flex-col items-center justify-between gap-4 md:flex-row">
               <div className="flex items-center gap-2">
                 <span className="font-semibold">Health Mapping Hub</span>

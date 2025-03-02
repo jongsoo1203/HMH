@@ -5,55 +5,45 @@ import { MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Card, CardHeader, CardFooter, CardContent } from "@/components/ui/card"
-import { getTrials } from "../app/api/trials"
-import { type Trial } from "../app/types/trial"
+import { createClient } from '@supabase/supabase-js';
+// import { getTrials } from "@/app/api/trials"
 
 export default async function TrialList() {
-    const response = await getTrials();
-    const data = await response.json();
-    console.log(data)
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+    );
+    // getTrials();
 
-    // Correctly map the data structure based on the console output
-    const trials: Trial[] = data.studies.map((study: any) => {
-        const protocolSection = study.protocolSection || {};
-
-        return {
-            nctId: protocolSection.identificationModule?.nctId || 'Unknown ID',
-            title: protocolSection.identificationModule?.briefTitle || 'No Title',
-            conditions: protocolSection.conditionsModule?.conditions || [],
-            conditionKeywords: protocolSection.conditionsModule?.keywords || [],
-            phase: protocolSection.designModule?.phases?.[0] || 'Not Specified',
-            locations: Array.from(new Set(protocolSection.contactsLocationsModule?.locations || [])),
-            startDate: protocolSection.statusModule?.startDateStruct?.date || 'Unknown',
-            status: protocolSection.statusModule?.overallStatus || 'Unknown',
-            participants: protocolSection.designModule?.enrollmentInfo?.count || 'Not Specified',
-            description: protocolSection.descriptionModule?.detailedDescription || 'No Description',
-            eligibilityCriteria: protocolSection.eligibilityModule?.eligibilityCriteria || 'No Criteria',
-            sex: protocolSection.eligibilityModule?.sex || 'Not Specified',
-            minimumAge: protocolSection.eligibilityModule?.minimumAge || 'Not Specified',
-            maximumAge: protocolSection.eligibilityModule?.maximumAge || 'Not Specified',
-            primaryOutcomes: protocolSection.outcomesModule?.primaryOutcomes || [],
-            secondaryOutcomes: protocolSection.outcomesModule?.secondaryOutcomes || [],
-        };
-    });
-
-    console.log("Processed trials:", trials);
+    const { data, error } = await supabase.from('trials').select('*');
+    if (error) {
+        console.error('Error fetching trials:', error);
+    }
+    const trials = data || [];
 
     return (
-        <article className="space-y-4">
+        <article className="space-y-4 mt-6">
             {trials.length > 0 ? (
                 trials.map((trial) => (
                     <Card
-                        key={trial.nctId}
+                        key={trial.id}
                         className="overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300"
                     >
                         <CardHeader className="pb-2">
                             <div className="flex justify-between">
                                 <Badge
-                                    variant="outline"
-                                    className="bg-opacity-90"
+                                    variant="secondary"
+                                    className={`${
+                                            trial.status === 'RECRUITING'
+                                                ? 'border-green-500'
+                                                : trial.status === 'NOT_YET_RECRUITING'
+                                                ? 'border-yellow-500'
+                                                : trial.status === 'ENROLLING_BY_INVITATION'
+                                                ? 'border-blue-500'
+                                                : ''
+                                        } bg-opacity-90`}
                                 >
-                                    {trial.status}
+                                    {trial.status.replaceAll("_", " ")}
                                 </Badge>
                                 <Badge variant="outline" className="font-medium">
                                     {trial.phase}
@@ -72,9 +62,7 @@ export default async function TrialList() {
                                         {Array.isArray(trial.locations) && trial.locations.length > 0 ? (
                                             trial.locations.slice(0, 3).map((location, index) => (
                                                 <span key={index} className="border border-primary-200 rounded-md p-1">
-                                                    {location.state && location.country
-                                                        ? `${location.state}, ${location.country}`
-                                                        : location.state || location.country || 'Unknown Location'}
+                                                    {location}
                                                 </span>
                                             ))
                                         ) : (
@@ -88,7 +76,7 @@ export default async function TrialList() {
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <Users className="h-4 w-4 text-secondary-600" />
-                                    <span>Participants: {trial.participants}</span>
+                                    <span>Participants: {trial.num_participants}</span>
                                 </div>
                             </div>
                             <div className="mt-3 flex items-center gap-2"></div>
