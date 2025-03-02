@@ -33,11 +33,11 @@ export default async function RootLayout({
   
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={montserrat.className} suppressHydrationWarning>
+      <body className={`${montserrat.className}`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="min-h-screen bg-background flex flex-col antialiased">
-            <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
-              <div className="container mx-auto px-4 flex h-16 items-center">
+          <div className="min-h-screen flex flex-col antialiased bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(137,196,244,0.5)_100%)]">
+          <header className="sticky top-0 z-3 w-full border-b bg-background/95 flex justify-evenly backdrop-blur supports-[backdrop-filter]:bg-background/90 px-4">
+          <div className="container mx-auto px-4 flex h-16 items-center">
                 <Link href={user ? "/dashboard" : "/"} className="flex items-center gap-2 font-semibold">
                   <Beaker className="h-8 w-8 text-blue-600" />
                   <span className="text-lg">Health Mapping Hub</span>
