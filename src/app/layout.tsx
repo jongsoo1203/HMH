@@ -15,7 +15,11 @@ export const metadata = {
   description: "app with Next.js and Supabase",
 };
 
-const montserrat = Montserrat();
+const montserrat = Montserrat({
+    subsets: ["latin"],
+    preload: true,
+  }
+);
 
 export default async function RootLayout({
   children,
