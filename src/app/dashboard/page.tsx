@@ -67,9 +67,9 @@ export default async function Dashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Redirect to sign-in page if not authenticated
+  // Redirect to log in page if not authenticated
   if (!user) {
-    return redirect("/sign-in");
+    return redirect("/");
   }
 
   return ( 

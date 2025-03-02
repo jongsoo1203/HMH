@@ -76,7 +76,7 @@ export default async function AuthButton() {
             <DropdownMenuLabel>Authentication</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/sign-in" className="w-full">Log in</Link>
+              <Link href="/" className="w-full">Log in</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/sign-up" className="w-full">Sign up</Link>
