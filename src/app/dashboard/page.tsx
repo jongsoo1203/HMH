@@ -57,6 +57,7 @@ const trials = [
   },
 ]
 
+// allows the authentication check to be done on the server
 export default async function Dashboard() {
   // Initialize Supabase client
   const supabase = await createClient();
