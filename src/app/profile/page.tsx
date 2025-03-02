@@ -1,9 +1,8 @@
-export default function contact() {
-    return (
-        <div className="flex justify-center items-center max-w-4xl mx-auto mt-[15rem] p-12 bg-white rounded-xl shadow-lg">
-            <p className="text-lg text-black font-medium">
-                Hi!
-            </p>
-        </div>
-    );
-};
+// This file should be placed at app/profile/page.tsx
+// It serves as the route handler for the /profile path
+
+import PatientProfile from '@/components/profile-page';
+
+export default function ProfilePage() {
+  return <PatientProfile />;
+}
