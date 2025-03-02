@@ -12,11 +12,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { signInAction } from "@/app/actions"
 import { createClient } from "@/utils/supabase/client"
 import { FormMessage, Message } from "@/components/form-message"
-import { SubmitButton } from "@/components/submit-button"
 
 export function LoginForm({
   className,
@@ -27,12 +26,20 @@ export function LoginForm({
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [formMessage, setFormMessage] = useState<Message | null>(message || null)
+  const isRedirecting = useRef(false)
   const supabase = createClient()
+
+  // Clean up form message when component unmounts
+  useEffect(() => {
+    return () => {
+      setFormMessage(null)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (isLoading) return; // Prevent multiple submissions
+    if (isLoading || isRedirecting.current) return // Prevent multiple submissions
     
     if (!email || !password) {
       setFormMessage({ error: "Email and password are required" })
@@ -42,28 +49,58 @@ export function LoginForm({
     setIsLoading(true)
     setFormMessage(null)
 
-    // Create a FormData object for the server action
-    const formData = new FormData()
-    formData.append("email", email)
-    formData.append("password", password)
-    
     try {
-      const result = await signInAction(formData)
+      // Try client-side authentication first
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
       
-      // If we reach here, it means we received a result (likely an error)
-      // instead of being redirected
-      if (result) {
-        setFormMessage({ error: "Invalid email or password" })
+      if (error) {
+        // If client-side auth fails, show the error
+        setFormMessage({ error: error.message })
+        setIsLoading(false)
+        return
+      }
+      
+      // Authentication succeeded, mark as redirecting to prevent flash of error
+      isRedirecting.current = true
+      
+      // Create and submit the form data to server action
+      const formData = new FormData()
+      formData.append("email", email)
+      formData.append("password", password)
+      
+      // The try/catch below is just a safety measure
+      try {
+        // This should trigger a redirect and not return
+        await signInAction(formData)
+        
+        // If we get here, the server action didn't redirect as expected
+        // Wait a brief moment (giving time for any state changes) then redirect manually
+        setTimeout(() => {
+          window.location.href = "/dashboard"
+        }, 100)
+      } catch (serverError) {
+        // This shouldn't happen normally, but handle it just in case
+        console.error("Server action error:", serverError)
+        
+        // Still redirect since we've already authenticated on the client
+        window.location.href = "/dashboard"
       }
     } catch (error) {
-      console.error("Sign in error:", error)
-      setFormMessage({ error: "An unexpected error occurred" })
-    } finally {
-      setIsLoading(false)
+      // Only show error if we're not already redirecting
+      if (!isRedirecting.current) {
+        console.error("Sign in error:", error)
+        setFormMessage({ error: "An unexpected error occurred" })
+        setIsLoading(false)
+      }
     }
   }
 
   const handleGoogleSignIn = async () => {
+    if (isLoading || isRedirecting.current) return
+    
     setIsLoading(true)
     setFormMessage(null)
 
@@ -80,10 +117,14 @@ export function LoginForm({
       })
       
       if (error) throw error
+      // Google sign-in handles redirection automatically
+      isRedirecting.current = true
     } catch (error) {
-      console.error("Google login error:", error)
-      setFormMessage({ error: "Failed to sign in with Google" })
-      setIsLoading(false)
+      if (!isRedirecting.current) {
+        console.error("Google login error:", error)
+        setFormMessage({ error: "Failed to sign in with Google" })
+        setIsLoading(false)
+      }
     }
   }
 
@@ -130,7 +171,7 @@ export function LoginForm({
                 required 
               />
             </div>
-            {formMessage && <FormMessage message={formMessage} />}
+            {formMessage && !isRedirecting.current && <FormMessage message={formMessage} />}
             <div className="flex flex-col gap-3 mt-2">
               <Button 
                 type="submit" 
