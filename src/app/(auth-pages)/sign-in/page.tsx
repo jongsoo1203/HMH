@@ -16,7 +16,6 @@ import { useState, useTransition } from "react"
 import { signInAction } from "@/app/actions"
 import { createClient } from "@/utils/supabase/client"
 import { FormMessage, Message } from "@/components/form-message"
-import { SubmitButton } from "@/components/submit-button"
 
 export function LoginForm({
   className,
