@@ -17,7 +17,7 @@ import { signInAction } from "@/app/actions"
 import { createClient } from "@/utils/supabase/client"
 import { FormMessage, Message } from "@/components/form-message"
 
-export function LoginForm({
+export default function LoginForm({
   className,
   message,
   ...props
