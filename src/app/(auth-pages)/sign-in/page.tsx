@@ -21,7 +21,7 @@ export default function LoginForm({
   className,
   message,
   ...props
-}: React.ComponentProps<"div"> & { message?: Message }) {
+}: React.HTMLAttributes<HTMLDivElement> & { message?: Message }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
