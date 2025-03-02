@@ -28,7 +28,6 @@ export function LoginForm({
   const [isLoading, setIsLoading] = useState(false)
   const [formMessage, setFormMessage] = useState<Message | null>(message || null)
   const supabase = createClient()
-  // Removed useTransition as we're using a direct approach
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,7 +47,6 @@ export function LoginForm({
     formData.append("email", email)
     formData.append("password", password)
     
-    // Use the SubmitButton approach which is more reliable with server actions
     try {
       const result = await signInAction(formData)
       
@@ -117,7 +115,7 @@ export function LoginForm({
                 <Label htmlFor="password">Password</Label>
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-foreground underline hover:text-primary"
+                  className="text-xs text-muted-foreground hover:text-foreground"
                 >
                   Forgot your password?
                 </Link>
@@ -134,7 +132,6 @@ export function LoginForm({
             </div>
             {formMessage && <FormMessage message={formMessage} />}
             <div className="flex flex-col gap-3 mt-2">
-              {/* Option 1: Use the original button with state handling */}
               <Button 
                 type="submit" 
                 className="w-full"
@@ -142,21 +139,6 @@ export function LoginForm({
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
-              
-              {/* Option 2: Use the SubmitButton component (uncomment to use) */}
-              {/* <SubmitButton 
-                className="w-full" 
-                pendingText="Signing In..." 
-                formAction={(formData) => {
-                  if (!email || !password) {
-                    setFormMessage({ error: "Email and password are required" })
-                    return
-                  }
-                  return signInAction(formData)
-                }}
-              >
-                Sign in
-              </SubmitButton> */}
               
               <Button 
                 type="button" 

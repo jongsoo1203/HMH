@@ -12,10 +12,10 @@ import {
 } from "./ui/dropdown-menu";
 import { User, LogOut } from "lucide-react";
 
-// Theme-aware avatar component
-function ThemeAwareAvatar() {
+// Simple avatar component without theme awareness
+function UserAvatar() {
   return (
-    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
       <User className="h-4 w-4" />
     </span>
   );
@@ -40,7 +40,7 @@ export default async function AuthButton() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <ThemeAwareAvatar />
+          <UserAvatar />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
