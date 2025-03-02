@@ -16,12 +16,14 @@ import { useState, useEffect, useRef } from "react"
 import { signInAction } from "@/app/actions"
 import { createClient } from "@/utils/supabase/client"
 import { FormMessage, Message } from "@/components/form-message"
+import { useRouter } from "next/navigation"
 
 export function LoginForm({
   className,
   message,
   ...props
 }: React.ComponentProps<"div"> & { message?: Message }) {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -63,8 +65,21 @@ export function LoginForm({
         return
       }
       
-      // Authentication succeeded, mark as redirecting to prevent flash of error
+      // Authentication succeeded, check if user has completed questionnaire
+      const { data: patientData } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('user_id', data.user.id)
+        .maybeSingle()
+      
+      // Mark as redirecting to prevent flash of error
       isRedirecting.current = true
+      
+      if (!patientData) {
+        // If no patient data exists, redirect to questionnaire
+        router.push('/questionnaire')
+        return
+      }
       
       // Create and submit the form data to server action
       const formData = new FormData()
@@ -73,7 +88,7 @@ export function LoginForm({
       
       // The try/catch below is just a safety measure
       try {
-        // This should trigger a redirect and not return
+        // This should trigger a redirect to dashboard
         await signInAction(formData)
         
         // If we get here, the server action didn't redirect as expected
